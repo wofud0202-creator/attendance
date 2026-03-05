@@ -250,11 +250,11 @@
         <option value="">-- 선택하세요 --</option>
 
         <!-- ✏️ 직원 이름 여기에 추가/수정 -->
-        <option>김민지</option>
-        <option>이수현</option>
-        <option>박지은</option>
-        <option>최하은</option>
-        <option>정유나</option>
+        <option>김가은</option>
+        <option>박지수</option>
+        <option>김하연</option>
+        <option>오지우</option>
+        <option>조민희</option>
 
       </select>
     </div>
@@ -311,7 +311,7 @@
   // ============================================================
   // ✏️ Apps Script 배포 URL 여기에 붙여넣기
   // ============================================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbyPns-AvEikxMicxQ1FYRiJ49VdRQ2wa2H_UL-hFZXbaXnVL6zepUz0Myv3nOVJizZ_1g/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzJ06dZU0NqlnLJ_ftdnH3BiBLi5G59nJFTpfX3BgvncQ-we0Jl5E578cAobWIxeyvK9g/exec";
   // ============================================================
 
   // 날짜 표시
@@ -356,7 +356,8 @@
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ name, checkIn, checkOut })
       });
       const data = await res.json();
@@ -382,7 +383,7 @@
     document.getElementById('result-name').textContent  = `${data.name}님 기록 완료 ✓`;
     document.getElementById('result-times').innerHTML   =
       `출근 &nbsp;<strong>${data.checkIn}</strong>&nbsp; → &nbsp;퇴근 &nbsp;<strong>${data.checkOut}</strong>`;
-    document.getElementById('result-work').textContent  = `총 ${data.summary} 근무`;
+    document.getElementById('result-work').textContent  = `총 ${data.summary}시간 근무`;
 
     document.getElementById('result-card').classList.add('show');
   }
