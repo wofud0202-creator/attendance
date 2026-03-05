@@ -4,12 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Belle & Beau — 출퇴근</title>
+  <title>Belle & Beau — 근무 기록</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap"
     rel="stylesheet" />
   <style>
-    /* ── 변수 ── */
     :root {
       --burgundy: #5a2d2d;
       --gold: #c9a96e;
@@ -40,7 +39,6 @@
       padding: 24px 16px;
     }
 
-    /* ── 배경 장식 ── */
     body::before {
       content: '';
       position: fixed;
@@ -51,7 +49,6 @@
       pointer-events: none;
     }
 
-    /* ── 카드 ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -60,13 +57,13 @@
       max-width: 400px;
       overflow: hidden;
       box-shadow: 0 8px 48px rgba(90, 45, 45, 0.10);
-      animation: fadeUp .5s ease both;
+      animation: fadeUp .4s ease both;
     }
 
     @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
       }
 
       to {
@@ -75,171 +72,149 @@
       }
     }
 
-    /* ── 헤더 ── */
+    /* 헤더 */
     .header {
       background: var(--burgundy);
-      padding: 32px 28px 24px;
+      padding: 28px 28px 22px;
       text-align: center;
-      position: relative;
     }
 
     .header::after {
       content: '';
       display: block;
-      width: 40px;
+      width: 36px;
       height: 1px;
       background: var(--gold);
-      margin: 12px auto 0;
+      margin: 10px auto 0;
       opacity: .7;
     }
 
     .brand-en {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 500;
       color: #fff;
       letter-spacing: .12em;
     }
 
     .brand-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: rgba(201, 169, 110, 0.85);
-      letter-spacing: .22em;
+      letter-spacing: .24em;
       text-transform: uppercase;
       margin-top: 4px;
     }
 
-    /* ── 시계 ── */
-    .clock-wrap {
-      padding: 20px 28px 0;
+    /* 날짜 */
+    .date-bar {
+      background: #f5efe8;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 28px;
       text-align: center;
-    }
-
-    #clock {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 42px;
-      font-weight: 400;
+      font-size: 13px;
       color: var(--burgundy);
+      font-weight: 500;
       letter-spacing: .04em;
-      line-height: 1;
     }
 
-    #date-str {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-      letter-spacing: .08em;
-    }
-
-    /* ── 폼 영역 ── */
+    /* 폼 */
     .form-area {
-      padding: 20px 28px 28px;
+      padding: 24px 28px 28px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     label {
-      display: block;
       font-size: 11px;
       font-weight: 500;
       color: var(--muted);
-      letter-spacing: .1em;
+      letter-spacing: .12em;
       text-transform: uppercase;
-      margin-bottom: 6px;
     }
 
-    select {
+    select,
+    input[type="time"] {
       width: 100%;
-      padding: 12px 16px;
+      padding: 13px 16px;
       border: 1.5px solid var(--border);
       border-radius: 10px;
       font-family: 'Noto Sans KR', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       color: var(--text);
       background: var(--cream);
+      transition: border-color .2s;
+    }
+
+    select {
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239e9189' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
-      cursor: pointer;
-      transition: border-color .2s;
     }
 
-    select:focus {
+    select:focus,
+    input[type="time"]:focus {
       outline: none;
       border-color: var(--burgundy);
+      background: #fff;
     }
 
-    /* ── 버튼 ── */
-    .btn-group {
+    /* 시간 행 */
+    .time-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .btn {
-      padding: 15px 12px;
+    /* 제출 버튼 */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--burgundy);
+      color: #fff;
       border: none;
       border-radius: 10px;
       font-family: 'Noto Sans KR', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 500;
+      letter-spacing: .06em;
       cursor: pointer;
-      letter-spacing: .04em;
-      transition: transform .15s, box-shadow .15s, opacity .15s;
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(90, 45, 45, 0.25);
+      transition: box-shadow .2s, transform .15s, opacity .15s;
     }
 
-    .btn:active {
-      transform: scale(.97);
+    .btn-submit:hover:not(:disabled) {
+      box-shadow: 0 6px 22px rgba(90, 45, 45, 0.35);
     }
 
-    .btn:disabled {
+    .btn-submit:active {
+      transform: scale(.98);
+    }
+
+    .btn-submit:disabled {
       opacity: .5;
       cursor: not-allowed;
     }
 
-    .btn-in {
-      background: var(--burgundy);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(90, 45, 45, 0.25);
-    }
-
-    .btn-in:hover:not(:disabled) {
-      box-shadow: 0 6px 20px rgba(90, 45, 45, 0.35);
-    }
-
-    .btn-out {
-      background: var(--cream);
-      color: var(--burgundy);
-      border: 1.5px solid var(--border);
-    }
-
-    .btn-out:hover:not(:disabled) {
-      border-color: var(--gold);
-      background: #fdf8f2;
-    }
-
-    .btn-icon {
-      margin-right: 6px;
-      font-size: 15px;
-    }
-
-    /* ── 상태 메시지 ── */
+    /* 메시지 */
     #msg {
-      min-height: 36px;
-      border-radius: 8px;
-      padding: 10px 14px;
+      border-radius: 10px;
+      padding: 12px 16px;
       font-size: 13px;
+      line-height: 1.6;
       text-align: center;
-      transition: all .3s;
-      opacity: 0;
+      display: none;
     }
 
     #msg.show {
-      opacity: 1;
+      display: block;
     }
 
     #msg.success {
@@ -262,37 +237,19 @@
       color: var(--muted);
     }
 
-    /* ── 오늘 현황 ── */
-    .today-section {
-      border-top: 1px solid var(--border);
-      padding: 18px 28px 24px;
+    /* 완료 화면 */
+    .result-card {
+      display: none;
+      margin: 0 28px 28px;
+      background: #edf5f0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
     }
 
-    .today-title {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    #today-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .today-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      background: var(--cream);
-      border-radius: 8px;
-      font-size: 13px;
-      animation: fadeIn .3s ease both;
+    .result-card.show {
+      display: block;
+      animation: fadeIn .3s ease;
     }
 
     @keyframes fadeIn {
@@ -305,43 +262,41 @@
       }
     }
 
-    .today-name {
+    .result-name {
+      font-size: 16px;
       font-weight: 500;
-      color: var(--text);
+      color: var(--success);
+      margin-bottom: 8px;
     }
 
-    .today-times {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
-
-    .dot-in {
-      background: var(--success);
-    }
-
-    .dot-out {
-      background: var(--muted);
-    }
-
-    .empty-msg {
+    .result-times {
       font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-      padding: 12px 0;
+      color: #5a7a65;
+      line-height: 2;
     }
 
-    /* ── 하단 ── */
+    .result-work {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--success);
+      margin-top: 6px;
+    }
+
+    .btn-reset {
+      margin-top: 14px;
+      padding: 9px 24px;
+      background: transparent;
+      border: 1.5px solid var(--success);
+      border-radius: 8px;
+      color: var(--success);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
     .footer {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 18px;
       font-size: 11px;
       color: var(--muted);
       letter-spacing: .06em;
@@ -353,54 +308,52 @@
 
   <div class="card">
 
-    <!-- 헤더 -->
     <div class="header">
       <div class="brand-en">Belle & Beau</div>
-      <div class="brand-sub">Attendance System</div>
+      <div class="brand-sub">Daily Work Record</div>
     </div>
 
-    <!-- 시계 -->
-    <div class="clock-wrap">
-      <div id="clock">--:--</div>
-      <div id="date-str">--</div>
-    </div>
+    <div class="date-bar" id="date-str">--</div>
 
-    <!-- 폼 -->
-    <div class="form-area">
-      <div>
-        <label>직원 선택</label>
+    <div class="form-area" id="form-area">
+
+      <div class="field">
+        <label>이름</label>
         <select id="name">
-          <option value="">-- 이름을 선택하세요 --</option>
+          <option value="">-- 선택하세요 --</option>
 
-          <!-- ✏️ 여기에 직원 이름 추가 -->
-          <option>김가은</option>
+          <!-- ✏️ 직원 이름 여기에 추가/수정 -->
           <option>김하연</option>
           <option>함소연</option>
           <option>조민희</option>
-          <option>박지수</option>
           <option>오지우</option>
+          <option>박지수</option>
 
         </select>
       </div>
 
+      <div class="time-row">
+        <div class="field">
+          <label>출근 시간</label>
+          <input type="time" id="check-in" />
+        </div>
+        <div class="field">
+          <label>퇴근 시간</label>
+          <input type="time" id="check-out" />
+        </div>
+      </div>
+
       <div id="msg"></div>
 
-      <div class="btn-group">
-        <button class="btn btn-in" onclick="submit('출근')">
-          <span class="btn-icon">☀️</span>출근
-        </button>
-        <button class="btn btn-out" onclick="submit('퇴근')">
-          <span class="btn-icon">🌙</span>퇴근
-        </button>
-      </div>
+      <button class="btn-submit" onclick="submitRecord()">근무 기록 제출</button>
+
     </div>
 
-    <!-- 오늘 현황 -->
-    <div class="today-section">
-      <div class="today-title">오늘 출퇴근 현황</div>
-      <div id="today-list">
-        <div class="empty-msg">불러오는 중...</div>
-      </div>
+    <div class="result-card" id="result-card">
+      <div class="result-name" id="result-name"></div>
+      <div class="result-times" id="result-times"></div>
+      <div class="result-work" id="result-work"></div>
+      <button class="btn-reset" onclick="resetForm()">다른 직원 입력</button>
     </div>
 
   </div>
@@ -409,101 +362,94 @@
 
   <script>
     // ============================================================
-    // ✏️ Apps Script 배포 후 여기에 URL 붙여넣기
+    // ✏️ Apps Script 배포 URL 여기에 붙여넣기
     // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbzfYKURE8KaPreW19ruZgogkwyx3NSjaI1W4xjoFqKN09XZgqll5J4FJtQIPQiee__H3Q/exec";
+    const API_URL = "여기https://script.google.com/macros/s/AKfycbypxk0NKptP7EdalfT7Nf22uUlKMJZdJqneT8_ZkWd9yNuJO9zmm05fDY6RqoEB2JgOwQ/exec에_Apps_Script_배포_URL_입력";
     // ============================================================
 
-    // ── 시계 ──
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').textContent =
-        now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
-      document.getElementById('date-str').textContent =
-        now.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' });
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
+    // 날짜 표시
+    const today = new Date();
+    document.getElementById('date-str').textContent =
+      today.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 
-    // ── 메시지 표시 ──
-    function showMsg(text, type = 'loading') {
+    // 메시지 표시
+    function showMsg(text, type) {
       const el = document.getElementById('msg');
       el.textContent = text;
       el.className = `show ${type}`;
     }
     function hideMsg() {
-      document.getElementById('msg').className = '';
+      const el = document.getElementById('msg');
+      el.className = '';
+      el.textContent = '';
     }
 
-    // ── 출퇴근 제출 ──
-    async function submit(type) {
+    // 제출
+    async function submitRecord() {
       const name = document.getElementById('name').value.trim();
-      if (!name) { showMsg('이름을 선택해주세요.', 'warn'); return; }
+      const checkIn = document.getElementById('check-in').value;
+      const checkOut = document.getElementById('check-out').value;
 
-      const btns = document.querySelectorAll('.btn');
-      btns.forEach(b => b.disabled = true);
-      showMsg(`${type} 기록 중...`, 'loading');
+      // 프론트 유효성 검사
+      if (!name) { showMsg('이름을 선택해주세요.', 'warn'); return; }
+      if (!checkIn) { showMsg('출근 시간을 입력해주세요.', 'warn'); return; }
+      if (!checkOut) { showMsg('퇴근 시간을 입력해주세요.', 'warn'); return; }
+
+      const [inH, inM] = checkIn.split(':').map(Number);
+      const [outH, outM] = checkOut.split(':').map(Number);
+      if ((outH * 60 + outM) <= (inH * 60 + inM)) {
+        showMsg('퇴근 시간이 출근 시간보다 빠릅니다.', 'error');
+        return;
+      }
+
+      const btn = document.querySelector('.btn-submit');
+      btn.disabled = true;
+      showMsg('기록 중...', 'loading');
 
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
-          mode: 'no-cors', // GitHub Pages → Apps Script CORS 우회
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, type })
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ name, checkIn, checkOut })
         });
-
-        // no-cors 모드에서는 응답을 읽을 수 없으므로 성공으로 처리
-        const now = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
-        showMsg(`✓ ${name}님 ${type} ${now} 기록 완료`, 'success');
-
-        // 3초 후 현황 새로고침
-        setTimeout(() => {
-          loadToday();
-          hideMsg();
-        }, 2500);
-
-      } catch (err) {
-        showMsg('오류가 발생했습니다. 다시 시도해주세요.', 'error');
-        console.error(err);
-      } finally {
-        btns.forEach(b => b.disabled = false);
-      }
-    }
-
-    // ── 오늘 현황 불러오기 ──
-    async function loadToday() {
-      const list = document.getElementById('today-list');
-      try {
-        const res = await fetch(API_URL + '?action=today', { method: 'GET' });
         const data = await res.json();
 
-        if (!data.records || data.records.length === 0) {
-          list.innerHTML = '<div class="empty-msg">아직 출근 기록이 없습니다.</div>';
-          return;
+        if (data.result === 'success') {
+          hideMsg();
+          showResult(data);
+        } else {
+          showMsg(data.message || '오류가 발생했습니다.', data.result === 'duplicate' ? 'warn' : 'error');
+          btn.disabled = false;
         }
-
-        list.innerHTML = data.records.map(r => `
-        <div class="today-row">
-          <span>
-            <span class="dot ${r.checkOut ? 'dot-out' : 'dot-in'}"></span>
-            <span class="today-name">${r.name}</span>
-          </span>
-          <span class="today-times">
-            ${r.checkIn ? '출근 ' + r.checkIn : ''}
-            ${r.checkOut ? ' · 퇴근 ' + r.checkOut : ' · 근무중'}
-            ${r.workMin ? ' (' + Math.floor(r.workMin / 60) + 'h ' + (r.workMin % 60) + 'm)' : ''}
-          </span>
-        </div>
-      `).join('');
-
       } catch (err) {
-        // no-cors 모드에서는 GET 응답도 읽기 어려우므로 조용히 처리
-        list.innerHTML = '<div class="empty-msg">현황을 불러오려면 직접 시트를 확인하세요.</div>';
+        showMsg('서버 연결에 실패했습니다. 다시 시도해주세요.', 'error');
+        btn.disabled = false;
+        console.error(err);
       }
     }
 
-    // 페이지 로드 시 현황 조회
-    loadToday();
+    // 완료 화면
+    function showResult(data) {
+      document.getElementById('form-area').style.display = 'none';
+
+      document.getElementById('result-name').textContent = `${data.name}님 기록 완료 ✓`;
+      document.getElementById('result-times').innerHTML =
+        `출근 &nbsp;<strong>${data.checkIn}</strong>&nbsp; → &nbsp;퇴근 &nbsp;<strong>${data.checkOut}</strong>`;
+      document.getElementById('result-work').textContent = `총 ${data.summary} 근무`;
+
+      document.getElementById('result-card').classList.add('show');
+    }
+
+    // 폼 초기화
+    function resetForm() {
+      document.getElementById('name').value = '';
+      document.getElementById('check-in').value = '';
+      document.getElementById('check-out').value = '';
+      hideMsg();
+      document.querySelector('.btn-submit').disabled = false;
+      document.getElementById('form-area').style.display = 'flex';
+      document.getElementById('result-card').classList.remove('show');
+    }
   </script>
 
 </body>
