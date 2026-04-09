@@ -184,6 +184,84 @@
       text-align: center; margin-top: 18px;
       font-size: 11px; color: var(--muted); letter-spacing: .06em;
     }
+
+    /* 이름 관리 토글 버튼 */
+    .btn-manage-toggle {
+      margin-top: 14px;
+      background: none; border: none;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: .08em; cursor: pointer;
+      text-decoration: underline; text-underline-offset: 3px;
+      transition: color .2s;
+    }
+    .btn-manage-toggle:hover { color: var(--burgundy); }
+
+    /* 이름 관리 카드 */
+    .manage-card {
+      display: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; width: 100%; max-width: 400px;
+      overflow: hidden; margin-top: 10px;
+      box-shadow: 0 4px 24px rgba(90,45,45,0.08);
+      animation: fadeUp .3s ease both;
+    }
+    .manage-card.show { display: block; }
+
+    .manage-lock-inner {
+      padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .manage-lock-title {
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      text-align: center; letter-spacing: .08em;
+    }
+    .manage-lock-inner input {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px; color: var(--text); background: var(--cream);
+    }
+    .manage-lock-inner input:focus { outline: none; border-color: var(--burgundy); background: #fff; }
+
+    .manage-body-inner { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+    .manage-title {
+      font-size: 13px; font-weight: 500; color: var(--text);
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+
+    #manage-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+    .add-row { display: flex; gap: 10px; }
+    .add-row input {
+      flex: 1; padding: 11px 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px; color: var(--text); background: var(--cream);
+    }
+    .add-row input:focus { outline: none; border-color: var(--burgundy); background: #fff; }
+    .btn-add-name {
+      padding: 11px 18px; background: var(--burgundy); color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      white-space: nowrap; transition: opacity .2s;
+    }
+    .btn-add-name:hover { opacity: .85; }
+
+    .staff-chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .staff-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 20px; padding: 7px 14px;
+      font-size: 13px; color: var(--text);
+    }
+    .chip-del {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 15px; line-height: 1;
+      padding: 0; transition: color .2s;
+    }
+    .chip-del:hover { color: var(--error); }
   </style>
 </head>
 <body>
@@ -302,13 +380,45 @@
   </div>
 </div>
 
+<!-- 이름 관리 토글 -->
+<button class="btn-manage-toggle" onclick="toggleManage()">직원 이름 관리</button>
+
+<!-- 이름 관리 패널 -->
+<div class="manage-card" id="manage-card">
+
+  <!-- 잠금 화면 -->
+  <div id="manage-lock">
+    <div class="manage-lock-inner">
+      <div class="manage-lock-title">관리자 확인</div>
+      <input type="password" id="manage-pw" placeholder="비밀번호 입력"
+        onkeydown="if(event.key==='Enter') unlockManage()" />
+      <div id="msg-lock" class="msg"></div>
+      <button class="btn-submit" style="margin-top:4px" onclick="unlockManage()">확인</button>
+    </div>
+  </div>
+
+  <!-- 관리 화면 -->
+  <div id="manage-body" style="display:none">
+    <div class="manage-title">직원 이름 관리</div>
+
+    <div class="add-row">
+      <input type="text" id="new-staff-name" placeholder="추가할 이름 입력"
+        onkeydown="if(event.key==='Enter') addStaffFromIndex()" />
+      <button class="btn-sm btn-add-name" onclick="addStaffFromIndex()">추가</button>
+    </div>
+
+    <div id="msg-manage" class="msg"></div>
+    <div class="staff-chip-list" id="manage-staff-list">불러오는 중...</div>
+  </div>
+</div>
+
 <div class="footer">Belle & Beau · La Terrasse de Paris · 만돈</div>
 
 <script>
   // ============================================================
   // ✏️ Apps Script 배포 URL 입력
   // ============================================================
-  const API_URL = "https://script.google.com/macros/s/AKfycbzJ06dZU0NqlnLJ_ftdnH3BiBLi5G59nJFTpfX3BgvncQ-we0Jl5E578cAobWIxeyvK9g/exec";
+  const API_URL = "여기에_Apps_Script_배포_URL_입력";
   // ============================================================
 
   // 날짜 표시
@@ -478,6 +588,96 @@
       showMsg('msg-past','서버 연결에 실패했습니다. 다시 시도해주세요.','error');
     } finally {
       btn.disabled = false;
+    }
+  }
+
+  // ── 이름 관리 ──
+  let manageUnlocked = false;
+
+  function toggleManage() {
+    const card = document.getElementById('manage-card');
+    const isOpen = card.classList.contains('show');
+    card.classList.toggle('show', !isOpen);
+    if (!isOpen && manageUnlocked) renderManageStaff();
+  }
+
+  async function unlockManage() {
+    const pw = document.getElementById('manage-pw').value;
+    if (!pw) return;
+
+    showMsg('msg-lock', '확인 중...', 'loading');
+
+    try {
+      const res  = await fetch(`${API_URL}?action=getPending&pw=${encodeURIComponent(pw)}`);
+      const data = await res.json();
+
+      if (data.result === 'auth') {
+        showMsg('msg-lock', '비밀번호가 틀렸습니다.', 'error');
+        return;
+      }
+
+      manageUnlocked = true;
+      sessionStorage.setItem('mgPw', pw);
+      document.getElementById('manage-lock').style.display = 'none';
+      document.getElementById('manage-body').style.display = 'flex';
+      renderManageStaff();
+
+    } catch(e) {
+      showMsg('msg-lock', '서버 연결에 실패했습니다.', 'error');
+    }
+  }
+
+  async function renderManageStaff() {
+    try {
+      const res  = await fetch(`${API_URL}?action=getStaff`);
+      const data = await res.json();
+      const el   = document.getElementById('manage-staff-list');
+
+      if (!data.names || data.names.length === 0) {
+        el.innerHTML = '<span style="font-size:13px;color:var(--muted)">등록된 직원이 없습니다.</span>';
+        return;
+      }
+      el.innerHTML = data.names.map(n => `
+        <div class="staff-chip">
+          ${n}
+          <button class="chip-del" onclick="deleteStaffFromIndex('${n}')" title="삭제">×</button>
+        </div>
+      `).join('');
+    } catch(e) {}
+  }
+
+  async function addStaffFromIndex() {
+    const pw   = sessionStorage.getItem('mgPw');
+    const name = document.getElementById('new-staff-name').value.trim();
+    if (!name) return;
+
+    const res  = await fetch(API_URL, {
+      method: 'POST', redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action:'addStaff', pw, name })
+    });
+    const data = await res.json();
+    showMsg('msg-manage', data.message, data.result === 'success' ? 'success' : data.result === 'duplicate' ? 'warn' : 'error');
+    if (data.result === 'success') {
+      document.getElementById('new-staff-name').value = '';
+      renderManageStaff();
+      loadStaff(); // 드롭다운도 갱신
+    }
+  }
+
+  async function deleteStaffFromIndex(name) {
+    if (!confirm(`${name}님을 삭제하시겠습니까?`)) return;
+    const pw  = sessionStorage.getItem('mgPw');
+    const res = await fetch(API_URL, {
+      method: 'POST', redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action:'deleteStaff', pw, name })
+    });
+    const data = await res.json();
+    showMsg('msg-manage', data.message, data.result === 'success' ? 'success' : 'error');
+    if (data.result === 'success') {
+      renderManageStaff();
+      loadStaff(); // 드롭다운도 갱신
     }
   }
 </script>
